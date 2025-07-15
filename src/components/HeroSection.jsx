@@ -3,7 +3,34 @@ import { Button } from '@/components/ui/button';
 import { DecorativeShapes } from '@/components/ui/DecorativeShapes';
 import { Link } from 'react-router-dom';
 import AuthModals from '@/components/AuthModals';
+import heroImg from '../components/photos/hero.png';
 
+// 👉 TalentLMS-style Promo Banner Section
+const PromoBanner = () => {
+  return (
+    <section className="relative overflow-hidden bg-[#f9fbfc] text-center py-20 px-6">
+      {/* Background Gradient Arcs */}
+      <div className="absolute top-[-200px] left-1/2 transform -translate-x-1/2 w-[150%] h-[150%] rounded-full bg-gradient-to-b from-blue-100 via-transparent to-transparent opacity-30 pointer-events-none" />
+
+      {/* Headline */}
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+        <span className="text-lms-primary">Empowering Financial Mastery.</span><br />
+        Built for Depth, Designed for Growth.
+      </h1>
+
+      {/* Image Section */}
+      <div className="mt-16 relative">
+        <img
+          src={heroImg}
+          alt="Dashboard Screenshot"
+          className="w-full max-w-6xl mx-auto rounded-xl shadow-2xl"
+        />
+      </div>
+    </section>
+  );
+};
+
+// 👉 Athena LMS Hero Section
 const HeroSection = () => {
   const [typingEffect, setTypingEffect] = useState('');
   const [signupOpen, setSignupOpen] = useState(false);
@@ -48,8 +75,11 @@ const HeroSection = () => {
 
   return (
     <>
+      {/* TalentLMS-like Promo Banner */}
+      <PromoBanner />
+
+      {/* Athena LMS Hero Section */}
       <section className="bg-gradient-to-b from-white to-lms-light py-12 md:py-16 overflow-hidden relative rounded-lg my-4 mx-2 sm:mx-4 lg:mx-6 w-full max-w-full">
-        {/* Add decorative shapes */}
         <DecorativeShapes variant="primary" intensity="medium" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 items-center w-full">
@@ -80,7 +110,6 @@ const HeroSection = () => {
           </div>
           
           <div className="relative animate-fade-in-right lg:ml-auto group w-full max-w-full">
-            {/* Updated image container with LMS dashboard animation */}
             <div className="absolute inset-0 bg-lms-primary/10 rounded-3xl transform rotate-3"></div>
             <div className="relative z-10 rounded-2xl shadow-lg overflow-hidden max-w-full">
               <img
@@ -89,7 +118,6 @@ const HeroSection = () => {
                 className="rounded-2xl w-full h-full object-cover max-w-full"
                 loading="eager"
               />
-              {/* Code overlay with LMS features animation */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="absolute bottom-8 left-8 right-8 p-4 rounded bg-black/80 opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 overflow-hidden">
                   <pre className="text-xs md:text-sm font-mono text-green-400 overflow-x-auto">
@@ -99,8 +127,8 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Updated floating boxes with LMS metrics */}
+
+            {/* Floating boxes */}
             <div className="absolute top-5 right-5 z-20 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-[float_4s_ease-in-out_infinite] w-32 max-w-[120px]">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-lms-primary rounded-full flex items-center justify-center flex-shrink-0">
@@ -112,7 +140,7 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="absolute bottom-20 -right-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-[float_5s_ease-in-out_infinite_1s] w-36 max-w-[130px]">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-lms-accent rounded-full flex items-center justify-center flex-shrink-0">
@@ -124,7 +152,7 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="absolute top-1/3 -left-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-[float_6s_ease-in-out_infinite_0.5s] w-32 max-w-[120px]">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-lms-secondary rounded-full flex items-center justify-center flex-shrink-0">
