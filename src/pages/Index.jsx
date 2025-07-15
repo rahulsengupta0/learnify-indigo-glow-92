@@ -11,6 +11,7 @@ import FAQSection from '@/components/FAQSection';
 import ContactUs from '@/components/ContactUs';
 import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
+import FeaturesSection from '../components/FeaturesSection';
 
 const Index = () => {
   const handleHumanAgentRequest = () => {
@@ -36,6 +37,7 @@ const Index = () => {
           <TestimonialsSection />
           <RealResultsSection />
           <FAQSection />
+          <FeaturesSection />
           <ContactUs />
         </div>
       </main>
