@@ -9,6 +9,12 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { DecorativeShapes } from '@/components/ui/DecorativeShapes';
+import certificate from './photos/certificate.jpg';
+import coursecreation from './photos/coursecreation.jpg';
+import livechat from './photos/livechat.jpg';
+import livelesson from './photos/livelesson.jpg';
+import statistics from './photos/statistics.jpg';
+import usermanagement from './photos/usermanagement.jpg';
 
 const FeaturesGrid = () => {
   const features = [
@@ -16,37 +22,49 @@ const FeaturesGrid = () => {
       icon: <BookOpen className="h-6 w-6 text-lms-primary" />,
       title: "Course Creation Tools",
       description: "Build interactive courses with multimedia content, assessments, and SCORM support",
-      color: "bg-blue-50 border-blue-100"
+      color: "bg-blue-50 border-blue-100",
+      image: coursecreation,
+      imageAlt: "Instructor creating an online course"
     },
     {
       icon: <BarChart3 className="h-6 w-6 text-lms-primary" />,
       title: "Advanced Analytics",
       description: "Track learner progress, engagement metrics, and performance analytics in real-time",
-      color: "bg-purple-50 border-purple-100"
+      color: "bg-purple-50 border-purple-100",
+      image: statistics,
+      imageAlt: "Learning analytics dashboard"
     },
     {
       icon: <Users className="h-6 w-6 text-lms-primary" />,
       title: "User Management",
       description: "Manage instructors, learners, and administrators with role-based permissions",
-      color: "bg-green-50 border-green-100"
+      color: "bg-green-50 border-green-100",
+      image: usermanagement,
+      imageAlt: "User management interface"
     },
     {
       icon: <Video className="h-6 w-6 text-lms-primary" />,
       title: "Live Sessions",
       description: "Conduct virtual classrooms with video conferencing and interactive whiteboards",
-      color: "bg-orange-50 border-orange-100"
+      color: "bg-orange-50 border-orange-100",
+      image: livelesson,
+      imageAlt: "Online live class session"
     },
     {
       icon: <MessageCircle className="h-6 w-6 text-lms-primary" />,
       title: "Live Chats",
-      description: "Enable real-time discussions and support between learners, instructors, and teams to enhance collaboration and engagement",
-      color: "bg-indigo-50 border-indigo-100"
+      description: "Enable real-time discussions and support between learners and instructors",
+      color: "bg-indigo-50 border-indigo-100",
+      image: livechat,
+      imageAlt: "Live chat interface"
     },
     {
       icon: <Award className="h-6 w-6 text-lms-primary" />,
       title: "Certification System",
       description: "Issue digital certificates and badges with blockchain verification support",
-      color: "bg-emerald-50 border-emerald-100"
+      color: "bg-emerald-50 border-emerald-100",
+      image: certificate,
+      imageAlt: "Digital certificate example"
     }
   ];
 
@@ -73,7 +91,7 @@ const FeaturesGrid = () => {
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for smoother motion
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
   };
@@ -101,7 +119,7 @@ const FeaturesGrid = () => {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -113,25 +131,26 @@ const FeaturesGrid = () => {
               variants={itemVariants}
               whileHover={{
                 y: -4,
-                scale: 1.02,
                 transition: {
                   duration: 0.2,
                   ease: "easeOut"
                 }
               }}
-              className={`${feature.color} border border-solid rounded-xl p-6 transition-all duration-300 hover:shadow-xl group cursor-pointer`}
+              className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer"
             >
-              <div className="flex items-start gap-4">
-                <motion.div
-                  className="p-3 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-all duration-300 flex-shrink-0"
-                  whileHover={{
-                    scale: 1.05,
-                    rotate: 2,
-                    transition: { duration: 0.2 }
-                  }}
-                >
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={feature.image}
+                  alt={feature.imageAlt}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+              
+              <div className={`p-6 ${feature.color} flex items-start gap-4`}>
+                <div className="p-3 bg-white rounded-lg shadow-sm group-hover:shadow-md transition-all duration-300 flex-shrink-0">
                   {feature.icon}
-                </motion.div>
+                </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-semibold text-lms-dark mb-2 group-hover:text-lms-primary transition-colors duration-300">
                     {feature.title}
