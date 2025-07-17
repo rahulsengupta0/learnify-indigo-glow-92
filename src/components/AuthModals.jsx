@@ -119,32 +119,27 @@ const AuthModals = ({
     }
   }, [loginOpen, signupOpen]);
 
-  const handleLoginSubmit = (values) => {
+  const handleLoginSubmit = async (values) => {
     setIsLoading(true);
     setAuthError(null);
-
-    // Simulate API call with validation
-    setTimeout(() => {
-      console.log("Login attempt with:", values);
-
-      // Simple credential check (for demo purposes)
-      if (values.email === MOCK_CREDENTIALS.email && values.password === MOCK_CREDENTIALS.password) {
-        setIsLoading(false);
-
-        // Call the onLoginSuccess callback to update auth state in parent
-        onLoginSuccess();
-
-        // Show success toast
-        toast({
-          title: "Login successful!",
-          description: "Welcome back to Athena",
-          variant: "default",
-        });
+    try {
+      const response = await axios.post("http://localhost:9000/api/auth/login", {
+        email: values.email,
+        password: values.password,
+      });
+      if (response.data.token) {
+        localStorage.setItem("session_token", response.data.token);
+        onLoginSuccess && onLoginSuccess();
+        onOpenChange(false, "login");
+        window.location.href = "https://creditor-academy-user-dashboard.netlify.app/";
       } else {
-        setIsLoading(false);
-        setAuthError("Invalid email or password. Please try again.");
+        setAuthError("Login failed. No token received.");
       }
-    }, 1500);
+    } catch (err) {
+      setAuthError(err.response?.data?.message || "Invalid email or password. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignupSubmit = async (values) => {
@@ -175,7 +170,17 @@ const AuthModals = ({
     setAuthError("");
     setSuccess && setSuccess("");
     try {
-      const payload = { ...signupForm.getValues(), otp: otpValues.otp };
+      const values = signupForm.getValues();
+      const payload = {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        email: values.email,
+        password: values.password,
+        phone: values.phoneNumber,
+        gender: values.gender,
+        dob: values.dob, // if present in your form
+        otp: otpValues.otp,
+      };
       const res = await axios.post("http://localhost:9000/api/auth/verify-otp", payload);
       if (res.data.token) {
         localStorage.setItem("session_token", res.data.token);
@@ -186,7 +191,7 @@ const AuthModals = ({
           setShowSignupSuccess(false);
           onSignupSuccess && onSignupSuccess();
           onOpenChange(false, "signup");
-          window.location.href = "/dashboard";
+          window.location.href = "https://creditor-academy-user-dashboard.netlify.app/";
         }, 1500);
       } else {
         setAuthError("No session token received.");
