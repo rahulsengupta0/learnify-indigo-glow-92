@@ -14,6 +14,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ReturnRefundPolicy from "./pages/ReturnRefundPolicy";
 import NotFound from "./pages/NotFound";
+import SignUpWithOTP from "./components/SignUpWithOTP";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
+          <Route path="/signup-otp" element={<SignUpWithOTP />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

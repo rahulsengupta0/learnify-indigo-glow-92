@@ -12,6 +12,7 @@ import { User, Mail, Lock, Upload, Phone, CheckCircle2, AlertCircle, Linkedin } 
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 // Login form schema
 const loginSchema = z.object({
@@ -65,6 +66,10 @@ const AuthModals = ({
   const [showPasswordResetSuccess, setShowPasswordResetSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
+  // Add OTP state for modal-based signup
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState(1); // 1: form, 2: otp
+  const [success, setSuccess] = useState("");
 
   // Login form
   const loginForm = useForm({
@@ -142,48 +147,55 @@ const AuthModals = ({
     }, 1500);
   };
 
-  const handleSignupSubmit = (values) => {
+  const handleSignupSubmit = async (values) => {
+    console.log("handleregister working");
     setIsLoading(true);
-    setAuthError(null);
-
-    // Validate form data
-    if (!values.firstName || !values.lastName || !values.email || !values.password) {
-      setIsLoading(false);
-      setAuthError("Please fill in all required fields");
-      return;
-    }
-
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Signup values:", values);
-      setIsLoading(false);
+    setAuthError("");
+    setShowSignupSuccess(false);
+    setShowOTPVerification(false);
+    setSuccess && setSuccess("");
+    try {
+      // Register user (send email, phone)
+      await axios.post("http://localhost:9000/api/auth/registerUser", {
+        email: values.email,
+        phone: values.phoneNumber,
+      });
+      setStep(2);
       setShowOTPVerification(true);
-    }, 1500);
+      setSuccess && setSuccess("OTP sent to your email.");
+    } catch (err) {
+      setAuthError(err.response?.data?.message || "Registration failed.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleOTPSubmit = (values) => {
+  const handleOTPSubmit = async (otpValues) => {
     setIsLoading(true);
-
-    // Simulate OTP verification
-    setTimeout(() => {
-      console.log("OTP values:", values);
-      setIsLoading(false);
-
-      // Check if OTP is valid (for demo, accept any 6-digit code)
-      if (values.otp.length === 6) {
+    setAuthError("");
+    setSuccess && setSuccess("");
+    try {
+      const payload = { ...signupForm.getValues(), otp: otpValues.otp };
+      const res = await axios.post("http://localhost:9000/api/auth/verify-otp", payload);
+      if (res.data.token) {
+        localStorage.setItem("session_token", res.data.token);
         setShowOTPVerification(false);
         setShowSignupSuccess(true);
-
-        // Auto close after 3 seconds and call success callback
+        setSuccess && setSuccess("Account created! Redirecting to dashboard...");
         setTimeout(() => {
           setShowSignupSuccess(false);
-          onSignupSuccess(); // Update auth state in parent
+          onSignupSuccess && onSignupSuccess();
           onOpenChange(false, "signup");
-        }, 3000);
+          window.location.href = "/dashboard";
+        }, 1500);
       } else {
-        setAuthError("Invalid OTP code. Please try again.");
+        setAuthError("No session token received.");
       }
-    }, 1500);
+    } catch (err) {
+      setAuthError(err.response?.data?.message || "OTP verification failed.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleForgotPasswordSubmit = (values) => {

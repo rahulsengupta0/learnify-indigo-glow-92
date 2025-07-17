@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const BASE_URL = 'https://creditor-backend-gvtd.onrender.com';
+const BASE_URL = 'http://localhost:9000';
 
 const initialUserState = {
   first_name: '',
@@ -29,10 +29,13 @@ export default function SignUpWithOTP() {
 
   // Register user (send email, phone)
   const handleRegister = async (e) => {
+    console.log("handleregister working");
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
+    console.log("handleregister working");
+    
     try {
       await axios.post(`${BASE_URL}/api/auth/registerUser`, {
         email: user.email,
