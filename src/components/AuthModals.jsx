@@ -13,6 +13,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { toast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 // Login form schema
 const loginSchema = z.object({
@@ -128,15 +129,20 @@ const AuthModals = ({
         password: values.password,
       });
       if (response.data.token) {
-        localStorage.setItem("session_token", response.data.token);
+        Cookies.set('session_token', response.data.token, { expires: 7, path: '/' });
         onLoginSuccess && onLoginSuccess();
         onOpenChange(false, "login");
-        window.location.href = "https://creditor-academy-user-dashboard.netlify.app/";
+        window.location.href = "/welcome";
       } else {
         setAuthError("Login failed. No token received.");
       }
     } catch (err) {
-      setAuthError(err.response?.data?.message || "Invalid email or password. Please try again.");
+      const backendMsg = err.response?.data?.message || "Invalid email or password. Please try again.";
+      if (backendMsg.toLowerCase().includes('not found') || backendMsg.toLowerCase().includes('no user')) {
+        setAuthError("Email doesn't exist, please sign up.");
+      } else {
+        setAuthError(backendMsg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -159,7 +165,12 @@ const AuthModals = ({
       setShowOTPVerification(true);
       setSuccess && setSuccess("OTP sent to your email.");
     } catch (err) {
-      setAuthError(err.response?.data?.message || "Registration failed.");
+      const backendMsg = err.response?.data?.message || "Registration failed.";
+      if (backendMsg.toLowerCase().includes('exist')) {
+        setAuthError("Email or phone number already exists.");
+      } else {
+        setAuthError(backendMsg);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -183,7 +194,7 @@ const AuthModals = ({
       };
       const res = await axios.post("http://localhost:9000/api/auth/verify-otp", payload);
       if (res.data.token) {
-        localStorage.setItem("session_token", res.data.token);
+        Cookies.set('session_token', res.data.token, { expires: 7, path: '/' });
         setShowOTPVerification(false);
         setShowSignupSuccess(true);
         setSuccess && setSuccess("Account created! Redirecting to dashboard...");
@@ -191,7 +202,7 @@ const AuthModals = ({
           setShowSignupSuccess(false);
           onSignupSuccess && onSignupSuccess();
           onOpenChange(false, "signup");
-          window.location.href = "https://creditor-academy-user-dashboard.netlify.app/";
+          window.location.href = "/welcome";
         }, 1500);
       } else {
         setAuthError("No session token received.");
